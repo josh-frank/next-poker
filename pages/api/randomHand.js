@@ -1,4 +1,4 @@
-import { cardName, fullDeck, handRank, handValue, allHolds } from "../poker"
+import { cardName, fullDeck, handRank, handValue, allHolds } from "../../poker"
 
 export default ( request, response ) => {
   const newDeck = fullDeck( 1 );
