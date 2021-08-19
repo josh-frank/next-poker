@@ -1,5 +1,7 @@
 const { flushes, fiveUniqueCards, hashAdjust, hashValues } = require( "./lookupTables" );
 
+const AVG_5CARD_HAND_VALUE = 5618.888055222089;
+
 exports.suits = { 8: "Clubs", 4: "Diamonds", 2: "Hearts", 1: "Spades" };
 const rankPrimes = [ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41 ];
 
@@ -9,6 +11,22 @@ const suit = card => ( card >>> 12 ) % 16;
 const rankNames = [ "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace" ];
 const suitNames = [ null, "Spades", "Hearts", null, "Diamonds", null, null, null, "Clubs" ];
 exports.cardName = card => `${ rankNames[ rank( card ) ] } of ${ suitNames[ suit( card ) ] }`;
+
+const deck = [
+    98306,     81922,     73730,     69634,
+    164099,    147715,    139523,    135427,
+    295429,    279045,    270853,    266757,
+    557831,    541447,    533255,    529159,
+    1082379,   1065995,   1057803,   1053707,
+    2131213,   2114829,   2106637,   2102541,
+    4228625,   4212241,   4204049,   4199953,
+    8423187,   8406803,   8398611,   8394515,
+    16812055,  16795671,  16787479,  16783383,
+    33589533,  33573149,  33564957,  33560861,
+    67144223,  67127839,  67119647,  67115551,
+    134253349, 134236965, 134228773, 134224677,
+    268471337, 268454953, 268446761, 268442665
+];
 
 exports.fullDeck = shuffled => {
     const result = [];
@@ -58,15 +76,32 @@ exports.handValue = hand => {
     else return "Straight flush";
 };
 
-exports.possibleHands = ( deck, combinationLength ) => {
+const combinations = ( cardSet, combinationLength ) => {
     let head, tail, result = [];
-    if ( combinationLength > deck.length || combinationLength < 1 ) { return []; }
-    if ( combinationLength === deck.length ) { return [ deck ]; }
-    if ( combinationLength === 1 ) { return deck.map( element => [ element ] ); }
-    for ( let i = 0; i < deck.length - combinationLength + 1; i++ ) {
-      head = deck.slice( i, i + 1 );
-      tail = this.possibleHands( deck.slice( i + 1 ), combinationLength - 1 );
-      for ( let j = 0; j < tail.length; j++ ) { result.push( head.concat( tail[ j ] ) ); }
+    if ( combinationLength > cardSet.length || combinationLength < 1 ) { return []; }
+    if ( combinationLength === cardSet.length ) { return [ cardSet ]; }
+    if ( combinationLength === 1 ) { return cardSet.map( card => [ card ] ); }
+    for ( let i = 0; i < cardSet.length - combinationLength + 1; i++ ) {
+        head = cardSet.slice( i, i + 1 );
+        tail = combinations( cardSet.slice( i + 1 ), combinationLength - 1 );
+        for ( let j = 0; j < tail.length; j++ ) { result.push( head.concat( tail[ j ] ) ); }
     }
     return result;
 }
+
+const possibleHolds = hand => [ ...Array( hand.length + 1 ).keys() ].slice( 1 ).reduce( ( result, holdLength ) =>
+    [ ...result, ...combinations( hand, holdLength ) ], []
+);
+
+exports.allHolds = hand => {
+    const holdPossibilities = Object.fromEntries( possibleHolds( hand ).map( hold => {
+        // hold.sort( ( a, b ) => a - b );
+        const possibleHands = combinations( deck.filter( card => !hold.includes( card ) ), hand.length - hold.length );
+        return [
+            hold, possibleHands.reduce( ( result, possibleHand ) => result + this.handRank( [ ...hold, ...possibleHand ] ), 0 ) / possibleHands.length
+        ];
+    } ) );
+    holdPossibilities[ "" ] = AVG_5CARD_HAND_VALUE;
+    holdPossibilities[ hand.join() ] = this.handRank( hand );
+    return holdPossibilities;
+};
