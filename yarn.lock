@@ -445,6 +445,11 @@ bn.js@^5.0.0, bn.js@^5.1.1:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.2.0.tgz#358860674396c6997771a9d051fcc1b57d4ae002"
   integrity sha512-D7iWRBvnZE8ecXiLj/9wbxH7Tk79fAh8IHaTNq1RWRixsS02W+5qS+iE9yq6RYl0asXx5tw0bLhmT5pIfbSquw==
 
+bolgia@>=2.7.4:
+  version "2.8.3"
+  resolved "https://registry.yarnpkg.com/bolgia/-/bolgia-2.8.3.tgz#bae607317a33fbda0c322297b43afd239ea739d2"
+  integrity sha512-BEmes/GII/02PNOHWlFUpXfuGPCV7kN4ABw6vmctoctix1PO+55D5GmjdSFAxwee58TC7r9nFm5gNvVE8scv1Q==
+
 brace-expansion@^1.1.7:
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
@@ -1327,6 +1332,13 @@ functional-red-black-tree@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
+
+geco@^0.11.1:
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/geco/-/geco-0.11.1.tgz#2dec107202a37bbfbb480892446a94a6ffc41411"
+  integrity sha512-RuZ2QWImhVLwaSCuhS9+iPIEL/kemh2xOa4ovnWXaR86GWWZndMXerMUpAjPyR4WHwnWn8pjY0kmy2iX2a4rwg==
+  dependencies:
+    toni ">=0.6.2"
 
 get-intrinsic@^1.0.2, get-intrinsic@^1.1.0, get-intrinsic@^1.1.1:
   version "1.1.1"
@@ -2965,6 +2977,13 @@ toidentifier@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
+
+toni@>=0.6.2:
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/toni/-/toni-0.6.2.tgz#a6af3bd70ae64de5ab1856e7036fb3b3e5e73cf8"
+  integrity sha1-pq871wrmTeWrGFbnA2+zs+XnPPg=
+  dependencies:
+    bolgia ">=2.7.4"
 
 tr46@^1.0.1:
   version "1.0.1"
