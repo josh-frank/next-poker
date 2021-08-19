@@ -6,12 +6,11 @@ export default ( request, response ) => {
   const holds = allHolds( newHand );
   response.status( 200 ).json( {
     hand: newHand,
-    deck: newDeck,
+    // deck: newDeck,
     cardNames: newHand.map( cardName ),
     rank: handRank( newHand ),
     value: handValue( newHand ),
-    bestHold: Object.keys( holds ).reduce( ( thisHold, thatHold ) => holds[ thisHold ] < holds[ thatHold ] ? thisHold : thatHold ),
+    bestHold: Object.keys( holds ).reduce( ( thisHold, thatHold ) => holds[ thisHold ] < holds[ thatHold ] ? thisHold : thatHold ).split( "," ).map( Number ),
     allHolds: holds
   } );
 }
-

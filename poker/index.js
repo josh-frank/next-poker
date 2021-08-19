@@ -78,50 +78,17 @@ exports.handValue = hand => {
     else return "Straight flush";
 };
 
-// const combinations = ( cardSet, combinationLength ) => {
-//     let head, tail, result = [];
-//     if ( combinationLength > cardSet.length || combinationLength < 1 ) { return []; }
-//     if ( combinationLength === cardSet.length ) { return [ cardSet ]; }
-//     if ( combinationLength === 1 ) { return cardSet.map( card => [ card ] ); }
-//     for ( let i = 0; i < cardSet.length - combinationLength + 1; i++ ) {
-//         head = cardSet.slice( i, i + 1 );
-//         tail = combinations( cardSet.slice( i + 1 ), combinationLength - 1 );
-//         for ( let j = 0; j < tail.length; j++ ) { result.push( head.concat( tail[ j ] ) ); }
-//     }
-//     return result;
-// }
-
-// const possibleHolds = hand => [ ...Array( hand.length + 1 ).keys() ].slice( 1 ).reduce( ( result, holdLength ) =>
-//     [ ...result, ...combinations( hand, holdLength ) ], []
-// );
-
-// exports.allHolds = hand => {
-//     const holdPossibilities = Object.fromEntries( possibleHolds( hand ).map( hold => {
-//         // hold.sort( ( a, b ) => a - b );
-//         const possibleHands = combinations( deck.filter( card => !hold.includes( card ) ), hand.length - hold.length );
-//         return [
-//             hold, possibleHands.reduce( ( result, possibleHand ) => result + this.handRank( [ ...hold, ...possibleHand ] ), 0 ) / possibleHands.length
-//         ];
-//     } ) );
-//     holdPossibilities[ "" ] = AVG_5CARD_HAND_VALUE;
-//     holdPossibilities[ hand.join() ] = this.handRank( hand );
-//     return holdPossibilities;
-// };
-
 exports.allHolds = hand => {
-    // const holdPossibilities = {};
-    // for ( const possibleHold of Geco.gen() ) {}
     const allPossibleHolds = [ ...Array( hand.length + 1 ).keys() ].slice( 1 ).reduce( ( result, holdLength ) =>
         [ ...result, ...Geco.gen( hand.length, holdLength, hand ) ]
     , [] );
-    const holdPossibilities = Object.fromEntries( allPossibleHolds.map( hold => {
-        let averageHandValueForThisHold = 0;
-        const deckForThisHold = deck.filter( card => !hold.includes( card ) );
-        for ( const possibleHand of Geco.gen( deckForThisHold.length, hand.length - hold.length, deckForThisHold ) ) averageHandValueForThisHold += this.handRank( [ ...hold, ...possibleHand ] );
-        return [ hold, averageHandValueForThisHold / Geco.cnt( deckForThisHold.length, hand.length - hold.length ) ];
-    } ) );
-    return { ...holdPossibilities, "": AVG_5CARD_HAND_VALUE };
+    return {
+        ...Object.fromEntries( allPossibleHolds.map( hold => {
+            let averageHandValueForThisHold = 0;
+            const deckForThisHold = deck.filter( card => !hold.includes( card ) );
+            for ( const possibleHand of Geco.gen( deckForThisHold.length, hand.length - hold.length, deckForThisHold ) ) averageHandValueForThisHold += this.handRank( [ ...hold, ...possibleHand ] );
+            return [ hold, averageHandValueForThisHold / Geco.cnt( deckForThisHold.length, hand.length - hold.length ) ];
+        } ) ),
+        "": AVG_5CARD_HAND_VALUE
+    };
 };
-
-// const test = [ ...Geco.gen( 5, 3, [ 0,1,2,3,4 ] ) ];
-// console.log( test );
